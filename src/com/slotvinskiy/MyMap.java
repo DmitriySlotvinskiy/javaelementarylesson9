@@ -1,6 +1,6 @@
 package com.slotvinskiy;
 
-public interface MyMap {
+public interface MyMap<K,V> {
 
     interface Node {
 
@@ -10,11 +10,11 @@ public interface MyMap {
 
     void clear();
 
-    boolean containsKey(String key);
+    boolean containsKey(K key);
 
-    public String get(String key);
+    public V get(K key);
 
-    String put(String key, String value);
+    V put(K key, V value);
 
     int size();
 

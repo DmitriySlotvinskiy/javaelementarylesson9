@@ -17,7 +17,7 @@ public class TestMyTreeMap {
         map.put("9", "Nine");
         map.put("4", "Four");
 
-        MyMap myMap = new MyTreeMap();
+        MyMap<String, String> myMap = new MyTreeMap();
         myMap.put("5", "Five");
         myMap.put("8", "Eight");
         myMap.put("3", "Three");

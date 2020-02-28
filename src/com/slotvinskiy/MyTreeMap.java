@@ -1,19 +1,31 @@
 package com.slotvinskiy;
 
-public class MyTreeMap implements MyMap {
+import java.util.Comparator;
+
+public class MyTreeMap<K,V> implements MyMap<K,V> {
+
+    private final Comparator<? super K> comparator;
 
     private int size = 0;
     private Node root = null;
 
+    public MyTreeMap() {
+        comparator = null;
+    }
+
+    public MyTreeMap(Comparator<? super K> comparator) {
+        this.comparator = comparator;
+    }
+
     private class Node {
 
-        private String key;
-        private String val;
+        private K key;
+        private V val;
         private Node left;
         private Node right;
         private Node parent;
 
-        public Node(String key, String value) {
+        public Node(K key, V value) {
             this.key = key;
             val = value;
         }
@@ -32,16 +44,16 @@ public class MyTreeMap implements MyMap {
     }
 
     @Override
-    public boolean containsKey(String key) {
+    public boolean containsKey(K key) {
         return getNode(key) != null;
     }
 
-    public String get(String key) {
+    public V get(K key) {
         return getNode(key) != null ? getNode(key).val : null;
     }
 
     @Override
-    public String put(String putKey, String putValue) {
+    public V put(K putKey, V putValue) {
         if (isEmpty()) {                            // если дерево пустое
             root = new Node(putKey, putValue);
             size++;
@@ -50,10 +62,10 @@ public class MyTreeMap implements MyMap {
         Node current = root;
         while (true) {
             if (isEquals(putKey, current.key)) {        // если вставляемый ключ уже есть в дереве
-                String temp = current.val;
+                V temp = current.val;
                 current.val = putValue;
                 return temp;
-            } else if (putKey.compareTo(current.key) > 0) {                //putKey > currentKey
+            } else if (compare(putKey, current.key) > 0) {                //putKey > currentKey
                 if (current.right != null) {
                     current = current.right;
                     continue;
@@ -77,11 +89,11 @@ public class MyTreeMap implements MyMap {
         }
     }
 
-    private boolean isEquals(String putKey, String key) {
+    private boolean isEquals(K putKey, K key) {
         return putKey.equals(key);
     }
 
-    private Node getNode(String key) {
+    private Node getNode(K key) {
         if (isEmpty()) {
             return null;
         }
@@ -89,7 +101,7 @@ public class MyTreeMap implements MyMap {
         while (true) {
             if (isEquals(key, current.key)) {                   //найдено совпадение
                 return current;
-            } else if (key.compareTo(current.key) > 0) {        //key > current.key
+            } else if (compare(key, current.key) > 0) {        //key > current.key
                 if (current.right != null) {
                     current = current.right;
                     continue;
@@ -111,6 +123,7 @@ public class MyTreeMap implements MyMap {
     public int size() {
         return size;
     }
+
 
     public boolean isEmpty() {
         return size == 0;
@@ -136,6 +149,11 @@ public class MyTreeMap implements MyMap {
         if (node.right != null) {
             printNode(node.right, sb);
         }
+    }
+
+    final int compare(Object k1, Object k2) {
+        return comparator==null ? ((Comparable<? super K>)k1).compareTo((K)k2)
+                : comparator.compare((K)k1, (K)k2);
     }
 }
 
